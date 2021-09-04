@@ -24,3 +24,68 @@
  * 
  * > **Not: İsteyenler `app2.php` ve `form2.php` isminde dosyalar oluşturup sınıfa farklı özellikler kazandırabilir.
  */
+
+class Form {
+
+    private array $fields; //html form elemanlarının değerleri tutulur
+
+    public function __construct
+    (
+        private string $method, //form nesnesinin method değeri
+        private string $action, //form nesnesinin gönderileceği sayfa
+    )
+    {
+        $this->method = $method;
+        $this->action = $action;
+    }
+
+    public static function createForm(string $method, string $action): Form //method ve action parametresi için oluşturduğumuz Form nesnesini döndürür.
+    {
+        $Form = new Form($method, $action);
+        return $Form;
+    }
+ 
+    public static function createPostForm(string $action): Form //post form nesnesi döndürür
+    {
+        return self::createForm($action, "POST");
+    }
+
+    public static function createGetForm(string $action): Form //get form nesnesi döndürür.
+    {
+        return self::createForm($action, "GET");
+    }  
+     
+    public function addField(string $name, string $label, ?string $defaultValue = null): void
+    //label name varsa value değerlerini field arrayine ekler
+    {
+     $field = [
+    "name"=>$name,
+    "label"=>$label,
+    "defaultvalue"=>$defaultValue,
+    ];
+
+    $this->fields[] = $field;
+    }
+
+    public function setMethod(string $method): void //form nesnesindeki method tipini değiştirecek
+    {
+      $this->method = $method;
+    }
+
+    public function render() : void //HTML FORM ALAN RENDER EDER
+    {
+        echo "<form action = $this->action method = $this->method >";
+
+        foreach ($this->fields as $field) 
+        {
+            echo "<label for = $field["name"] > $field["label"]</label> ";
+            echo "<input type = 'text' name = $field["name"] value = $field["value"] />";
+        }
+        echo "<button type = 'submit'>Gönder</button>";
+        echo "</form>";
+    }
+
+}
+
+   ?>
+
